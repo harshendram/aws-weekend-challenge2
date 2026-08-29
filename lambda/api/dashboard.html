@@ -427,8 +427,9 @@ const icon = (id, cls) => '<svg class="ico ' + (cls || '') + '"><use href="#i-' 
   id + '"/></svg>';
 const money = v => v == null ? '\u2014'
   : '$' + (v < 0.01 ? Number(v).toFixed(5) : Number(v).toFixed(3));
-const rise = (i) => 'class="rise" style="animation-delay:' +
-  Math.min(i * 45, 400) + 'ms"';
+// Only the style attribute: every caller already has a class list of its own,
+// and emitting a second class="" here would make the browser discard one.
+const delay = (i) => 'style="animation-delay:' + Math.min(i * 45, 400) + 'ms"';
 
 let runs = [], current = null;
 
@@ -489,7 +490,7 @@ function renderStats(snap, runList){
   ];
 
   $('#stats').innerHTML = tiles.map((t, i) =>
-    '<div class="nb lift stat ' + (t.cls || '') + '" ' + rise(i) + '>' +
+    '<div class="nb lift rise stat ' + (t.cls || '') + '" ' + delay(i) + '>' +
       '<div class="k">' + icon(t.i) + t.k + '</div>' +
       '<div class="v">' + esc(t.v) + '</div>' +
       '<div class="s">' + esc(t.s) + '</div>' +
@@ -511,14 +512,14 @@ function renderReach(snap){
 
   const targets = Object.keys(ent).sort().map((t, i) => {
     const e = ent[t], ok = !!e.reachable;
-    return '<div class="nb lift t ' + (ok ? 'up' : 'down') + '" ' + rise(i) + '>' +
+    return '<div class="nb lift rise t ' + (ok ? 'up' : 'down') + '" ' + delay(i) + '>' +
       '<div class="badge">' + icon(ok ? 'check' : 'x') + '</div>' +
       '<div style="min-width:0"><div class="id">' + esc(t) + '</div>' +
       '<div class="why">' + esc(e.detail || '') + '</div></div></div>';
   }).join('');
 
   const regions = Object.entries(snap.regions || {}).map(([r, c], i) =>
-    '<div class="nb lift reg" ' + rise(i) + '>' +
+    '<div class="nb lift rise reg" ' + delay(i) + '>' +
       '<div class="v">' + ((c.on_demand || 0) + (c.profiles || 0)) + '</div>' +
       '<div class="r">' + esc(r) + '</div>' +
       '<div class="b">' + (c.on_demand || 0) + ' on-demand / ' +
@@ -539,7 +540,7 @@ function renderEvents(events){
     ? events.length + ' recorded' : 'no change';
   $('#events').innerHTML = events.length
     ? events.map((e, i) =>
-        '<div class="nb lift ev" ' + rise(i) + '>' +
+        '<div class="nb lift rise ev" ' + delay(i) + '>' +
           '<span class="kind k-' + esc(e.severity || 'info') + '">' +
             esc(e.kind || '') + '</span>' +
           '<span class="d">' + esc(e.detail || '') + '</span>' +
@@ -558,8 +559,8 @@ function renderRuns(){
     const flag = worst === 'OK' ? ''
       : '<span class="f ' + (worst === 'FAIL' ? 't-FAIL' : 't-RISKY') + '">' +
         (worst === 'FAIL' ? 'NEEDS ATTENTION' : 'FLAKY') + '</span>';
-    return '<button class="nb lift run" data-id="' + esc(r.run_id) +
-      '" aria-current="' + (r.run_id === current) + '" ' + rise(i) + '>' +
+    return '<button class="nb lift rise run" data-id="' + esc(r.run_id) +
+      '" aria-current="' + (r.run_id === current) + '" ' + delay(i) + '>' +
       '<div class="c">' + esc(r.title || r.contract) + '</div>' +
       '<div class="m">' + esc(when(r.created_at)) + ' &middot; ' +
         esc(r.trigger || 'manual') + '</div>' + flag + '</button>';
@@ -594,7 +595,7 @@ function render(run){
       .concat((v.flaky || []).length
         ? ['<span class="chip flaky">flaky \u00d7' + v.flaky.length + '</span>'] : [])
       .join('');
-    return '<tr ' + rise(i) + '><td>' +
+    return '<tr class="rise" ' + delay(i) + '><td>' +
       '<div class="tname">' + esc(v.label || v.target) + '</div>' +
       '<div class="bar"><i style="width:' + pct + '%;background:' +
         (tierBg[v.tier] || 'var(--slate)') + ';animation-delay:' +
