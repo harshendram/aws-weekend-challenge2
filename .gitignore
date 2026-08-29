@@ -4,3 +4,7 @@ runs/
 *.pyc
 __pycache__/
 out.json
+.tools/
+node_modules/
+screenshots/_render.html
+screenshots/_validate.html

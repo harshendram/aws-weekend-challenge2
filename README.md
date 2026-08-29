@@ -6,6 +6,12 @@ still *behave* the way your contract says?**
 
 Built for the AWS Builder Center *Weekend Showcase Challenge*, August 2026.
 
+![Dashboard](screenshots/dashboard-top.png)
+
+*`NO INFERENCE` is not a rendering bug. That is the radar correctly reporting
+that this account cannot call Bedrock at all, while Comprehend and Translate
+answer fine.*
+
 ---
 
 ## The problem
@@ -154,6 +160,11 @@ half of a short-text bill is floor, not usage.
 ---
 
 ## Architecture
+
+![Architecture](screenshots/architecture.png)
+
+Mermaid sources for this and the other diagrams live in
+[`screenshots/`](screenshots/), alongside the captures of the live dashboard.
 
 ```
 EventBridge (daily 09:00 UTC)

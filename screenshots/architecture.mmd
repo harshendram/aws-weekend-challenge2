@@ -1,0 +1,70 @@
+---
+title: Model Drift Radar — architecture
+---
+flowchart TB
+    EB["<b>EventBridge</b><br/>daily 09:00 UTC<br/>mode = sweep"]
+    PL["<b>AWS Price List API</b><br/>real per-region rates"]
+
+    subgraph AGENT["radar-agent · Lambda · python3.13 · 600 s"]
+        direction TB
+        REACH["<b>reach.py</b><br/>catalog diff · probes<br/>entitlement · change events"]
+        ENGINE["<b>engine.py</b><br/>cases × 3 reps × targets"]
+        VERDICT["<b>verdict.py</b><br/>tier assigned in code,<br/>never by a model"]
+        PROV["<b>providers.py</b><br/>provider:op@region?params<br/>every reply becomes text"]
+        STORE["<b>store.py</b><br/>single write path"]
+        REACH --> PROV
+        ENGINE --> PROV
+        ENGINE --> VERDICT
+        REACH --> STORE
+        VERDICT --> STORE
+    end
+
+    subgraph LIVE["Live AWS calls, every run"]
+        direction LR
+        BR["<b>Bedrock</b><br/>control plane + runtime"]
+        CMP["<b>Comprehend</b><br/>PII · sentiment · language"]
+        TRN["<b>Translate</b><br/>text + round trip"]
+        SQ["<b>Service Quotas</b><br/>entitlement evidence"]
+    end
+
+    subgraph OUT["Durable state"]
+        direction LR
+        DDB[("<b>DynamoDB</b><br/>RUN · SNAPSHOT · EVENT")]
+        S3[("<b>S3</b> private<br/>raw attempt output")]
+        SNS["<b>SNS</b> radar-alerts<br/>published only<br/>when something changed"]
+    end
+
+    JSON["<b>radar-api</b> · Lambda + Function URL<br/>read-only JSON · /api/reach · /api/events · /api/runs"]
+    DASH["<b>dashboard.html</b><br/>same origin — no CORS, no public bucket"]
+    USER(["Browser"])
+    JSON --> DASH
+
+    EB ==> REACH
+    PL -. "baked into pricing.json at build time" .-> ENGINE
+
+    PROV --> BR
+    PROV --> CMP
+    PROV --> TRN
+    PROV --> SQ
+
+    STORE ==> DDB
+    STORE ==> S3
+    STORE ==> SNS
+
+    DDB ==> JSON
+    S3 ==> JSON
+    DASH ==> USER
+
+    classDef code fill:#B8F14A,stroke:#14131A,stroke-width:3px,color:#14131A
+    classDef svc fill:#C9AEFF,stroke:#14131A,stroke-width:3px,color:#14131A
+    classDef data fill:#7DC8FF,stroke:#14131A,stroke-width:3px,color:#14131A
+    classDef alert fill:#FF8C82,stroke:#14131A,stroke-width:3px,color:#14131A
+    classDef trig fill:#FFD23F,stroke:#14131A,stroke-width:3px,color:#14131A
+    classDef plain fill:#FFFFFF,stroke:#14131A,stroke-width:3px,color:#14131A
+
+    class REACH,ENGINE,VERDICT,PROV,STORE code
+    class BR,CMP,TRN,SQ svc
+    class DDB,S3 data
+    class SNS alert
+    class EB,PL trig
+    class JSON,DASH,USER plain

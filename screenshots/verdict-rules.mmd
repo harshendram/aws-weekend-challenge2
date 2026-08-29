@@ -1,0 +1,47 @@
+---
+title: How a verdict is decided — rules in code, never a model
+---
+flowchart LR
+    START["<b>Scorecard for one target</b><br/>every case × 3 repetitions,<br/>aggregated"]
+
+    Q1{"Did any call<br/>succeed at all?"}
+    Q2{"Is this the<br/>baseline target?"}
+    Q3{"How many assertion classes<br/><b>never</b> pass?"}
+    Q4{"Flaky across repetitions,<br/>or passing less often<br/>than the baseline?"}
+    Q5{"Cheaper than the baseline,<br/>with both costs actually known?"}
+
+    ERROR["<b>ERROR</b><br/>could not be called"]
+    BASE["<b>BASELINE</b><br/>the reference — but its own<br/>failures are still reported"]
+    FAIL["<b>FAIL</b><br/>do not migrate"]
+    RISKY["<b>RISKY</b><br/>migrate only behind a guard"]
+    SAFE["<b>SAFE</b><br/>correct, not cheaper"]
+    SWITCH["<b>SWITCH</b><br/>correct and cheaper"]
+
+    START --> Q1
+    Q1 -- no --> ERROR
+    Q1 -- yes --> Q2
+    Q2 -- yes --> BASE
+    Q2 -- no --> Q3
+    Q3 -- "2 or more" --> FAIL
+    Q3 -- "exactly 1" --> RISKY
+    Q3 -- none --> Q4
+    Q4 -- yes --> RISKY
+    Q4 -- no --> Q5
+    Q5 -- no --> SAFE
+    Q5 -- yes --> SWITCH
+
+    classDef q fill:#FFFFFF,stroke:#14131A,stroke-width:3px,color:#14131A
+    classDef switch fill:#B8F14A,stroke:#14131A,stroke-width:3.5px,color:#14131A
+    classDef safe fill:#7DC8FF,stroke:#14131A,stroke-width:3.5px,color:#14131A
+    classDef base fill:#C9AEFF,stroke:#14131A,stroke-width:3.5px,color:#14131A
+    classDef risky fill:#FFD23F,stroke:#14131A,stroke-width:3.5px,color:#14131A
+    classDef fail fill:#FF8C82,stroke:#14131A,stroke-width:3.5px,color:#14131A
+    classDef err fill:#D9D6CE,stroke:#14131A,stroke-width:3.5px,color:#14131A
+
+    class START,Q1,Q2,Q3,Q4,Q5 q
+    class SWITCH switch
+    class SAFE safe
+    class BASE base
+    class RISKY risky
+    class FAIL fail
+    class ERROR err

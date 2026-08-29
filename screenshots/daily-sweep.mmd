@@ -1,0 +1,46 @@
+---
+title: What one unattended daily sweep actually does
+---
+sequenceDiagram
+    autonumber
+    participant EB as EventBridge
+    participant AG as radar-agent
+    participant CAT as Bedrock<br/>control plane
+    participant TGT as Live targets<br/>(Bedrock/Comprehend/Translate)
+    participant DB as DynamoDB
+    participant SNS as SNS
+
+    EB->>AG: {"mode":"sweep"} · 09:00 UTC
+
+    rect rgba(184, 241, 74, 0.18)
+    note over AG,TGT: Phase 1 — reachability
+    AG->>CAT: ListFoundationModels + ListInferenceProfiles<br/>× 4 regions
+    CAT-->>AG: full text-model catalog
+    AG->>TGT: one-token probe per watched dependency
+    TGT-->>AG: answered / refused / errored
+    note right of AG: the probe is the authority.<br/>the catalog lists models<br/>you may not be entitled to call.
+    end
+
+    rect rgba(125, 200, 255, 0.18)
+    note over AG,SNS: Phase 2 — diff against yesterday
+    AG->>DB: read previous SNAPSHOT
+    DB-->>AG: yesterday's state
+    AG->>AG: diff → ACCESS_LOST · MODEL_ADDED<br/>MODEL_REMOVED · PRICE_CHANGED<br/>ENTITLEMENT_CHANGED
+    alt something actually changed
+        AG->>SNS: publish alert
+    else nothing changed
+        AG--)AG: stay silent
+        note right of AG: a daily "all clear" email<br/>is a daily "ignore me" email
+    end
+    AG->>DB: write SNAPSHOT + EVENTs
+    end
+
+    rect rgba(201, 174, 255, 0.18)
+    note over AG,DB: Phase 3 — behaviour contracts
+    loop each live contract
+        AG->>TGT: replay cases × 3 repetitions × every target
+        TGT-->>AG: outputs
+        AG->>AG: assert → aggregate → assign tier<br/>(in code, never by a model)
+        AG->>DB: write RUN summary
+    end
+    end

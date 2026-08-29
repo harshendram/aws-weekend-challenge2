@@ -1,0 +1,14 @@
+{
+  "name": "model-drift-radar-diagrams",
+  "private": true,
+  "type": "module",
+  "description": "Renders the .mmd sources here to PNG and captures the deployed dashboard.",
+  "scripts": {
+    "render": "node render.mjs",
+    "validate": "node validate.mjs ../docs/ARTICLE.md"
+  },
+  "dependencies": {
+    "mermaid": "^11.17.2",
+    "puppeteer-core": "^25.9.0"
+  }
+}
