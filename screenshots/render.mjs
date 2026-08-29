@@ -128,28 +128,54 @@ for (const f of (await readdir(shots)).filter((f) => f.endsWith(".mmd"))) {
 }
 
 const url = process.argv[2];
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function open(width, height) {
+  const p = await browser.newPage();
+  await p.setViewport({ width, height, deviceScaleFactor: 2 });
+  await p.goto(url, { waitUntil: "networkidle0", timeout: 90000 });
+  await wait(3500);
+  return p;
+}
+
+// Sections are matched on their visible heading rather than a nth-child, so a
+// reordered dashboard fails loudly here instead of quietly shipping the wrong
+// crop into the article.
+async function section(p, heading, out) {
+  const handle = await p.evaluateHandle(
+    (h) =>
+      [...document.querySelectorAll("section")].find((s) =>
+        new RegExp(h, "i").test(s.querySelector("h2")?.textContent || "")
+      ) ?? null,
+    heading
+  );
+  const el = handle.asElement();
+  if (!el) throw new Error(`no section matching /${heading}/ on the dashboard`);
+  await el.screenshot({ path: path.join(shots, out) });
+  console.log(`  ${out}`);
+}
+
 if (url) {
   console.log("dashboard:");
-  for (const [name, w, full] of [
-    ["dashboard-full.png", 1440, true],
-    ["dashboard-top.png", 1440, false],
+
+  for (const [name, full] of [
+    ["dashboard-top.png", false],
+    ["dashboard-full.png", true],
   ]) {
-    const p = await browser.newPage();
-    await p.setViewport({ width: w, height: 1050, deviceScaleFactor: 2 });
-    await p.goto(url, { waitUntil: "networkidle0", timeout: 90000 });
-    await new Promise((r) => setTimeout(r, 3500));
+    const p = await open(1440, 1050);
     await p.screenshot({ path: path.join(shots, name), fullPage: full });
     console.log(`  ${name}`);
     await p.close();
   }
 
+  const reach = await open(1400, 1200);
+  await section(reach, "Dependency reachability", "reachability.png");
+  await reach.close();
+
   // The PII contract is the most interesting scorecard in the set, so open it
   // deliberately rather than shipping whatever happened to be selected first.
-  const p = await browser.newPage();
-  await p.setViewport({ width: 1500, height: 1200, deviceScaleFactor: 2 });
-  await p.goto(url, { waitUntil: "networkidle0", timeout: 90000 });
-  await new Promise((r) => setTimeout(r, 3500));
-  const picked = await p.evaluate(() => {
+  const runs = await open(1500, 1200);
+  const picked = await runs.evaluate(() => {
     const b = [...document.querySelectorAll(".run")].find((x) =>
       /PII detection/i.test(x.textContent)
     );
@@ -157,18 +183,11 @@ if (url) {
     b.click();
     return b.textContent.replace(/\s+/g, " ").trim();
   });
-  await new Promise((r) => setTimeout(r, 3000));
-  const sec = await p.evaluateHandle(() =>
-    [...document.querySelectorAll("section")].find((s) =>
-      /Behaviour contracts/i.test(s.querySelector("h2")?.textContent || "")
-    )
-  );
-  const el = sec.asElement();
-  if (el) {
-    await el.screenshot({ path: path.join(shots, "contract-scorecard.png") });
-    console.log(`  contract-scorecard.png  (selected: ${picked ?? "default"})`);
-  }
-  await p.close();
+  if (!picked) throw new Error("no 'PII detection' run in the sidebar");
+  await wait(3000);
+  await section(runs, "Behaviour contracts", "contract-scorecard.png");
+  console.log(`    (selected: ${picked})`);
+  await runs.close();
 }
 
 await browser.close();

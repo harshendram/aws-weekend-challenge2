@@ -39,10 +39,10 @@ behave — and it tells you only when the answer changed.
 
 ![Model Drift Radar dashboard](https://raw.githubusercontent.com/harshendram/aws-weekend-challenge2/main/screenshots/dashboard-top.png)
 
-*The live dashboard. `NO INFERENCE` is not a rendering bug — that is the radar
-correctly reporting that this AWS account cannot call Bedrock at all, while
-Comprehend and Translate answer fine. This is exactly the state that was
-silently breaking my other agent.*
+*Screenshot 1 — the live dashboard. `NO INFERENCE` is not a rendering bug. That
+is the radar correctly reporting that this AWS account cannot call Bedrock at
+all, while Comprehend and Translate answer fine. This is exactly the state that
+was silently breaking my other agent, and nothing else I own would have told me.*
 
 ## What it does
 
@@ -58,16 +58,18 @@ you are not entitled to invoke, and the Service Quotas API is slow and
 occasionally returns `408`. The only answer that cannot be argued with is an
 actual call.
 
+![Dependency reachability](https://raw.githubusercontent.com/harshendram/aws-weekend-challenge2/main/screenshots/reachability.png)
+
+*Screenshot 2 — the reachability panel, which is the whole thesis in one view.
+Three Bedrock targets refuse the call, four Comprehend and Translate targets
+answer in 235–833 ms, and the account is short 151 out of 151 inference quotas.
+The row of region counts underneath is the catalog: 329 models AWS will happily
+list for an account that cannot invoke a single one of them.*
+
 **Behaviour.** A contract is a JSON file: some inputs, and the properties the
 output must hold. The radar replays it across every target, three times each,
 and grades the result into tiers — `SWITCH`, `SAFE`, `BASELINE`, `RISKY`,
 `FAIL`, `ERROR`.
-
-![What one daily sweep does](https://raw.githubusercontent.com/harshendram/aws-weekend-challenge2/main/screenshots/daily-sweep.png)
-
-*One unattended sweep, end to end: scan, diff against yesterday, then replay
-every behaviour contract. Note the `alt` block — silence is a deliberate
-output, not a missing feature.*
 
 ## How I built it, the decisions, and the pivot
 
@@ -110,11 +112,6 @@ survives every manual spot-check you will ever run, then fails in production.
 Averaging those into one pass rate destroys the most valuable signal the tool
 produces, so a sometimes-passing check is `RISKY` on its own.
 
-![How a verdict is decided](https://raw.githubusercontent.com/harshendram/aws-weekend-challenge2/main/screenshots/verdict-rules.png)
-
-*The whole grader. It is a decision tree in plain Python — no model sits
-anywhere on this path.*
-
 The hardest part was resisting the urge to fake it. Pricing comes from the live
 AWS Price List API, per region, for all three services. If a target cannot be
 priced, its cost is `None` — never `0`, never a guess, because an unknown cost
@@ -145,10 +142,11 @@ These are live results, not hypotheticals:
 
 ![PII detection scorecard](https://raw.githubusercontent.com/harshendram/aws-weekend-challenge2/main/screenshots/contract-scorecard.png)
 
-*The stricter-threshold result, measured rather than assumed. Same service, same
-inputs, same price — `min=0.999` drops to 18/27 and is the only row that fails
-outright. The amber banner is the tool admitting its own baseline is imperfect,
-which felt more useful than hiding it.*
+*Screenshot 3 — the stricter-threshold result, measured rather than assumed.
+Same service, same inputs, same published price: `min=0.999` falls to 18/27 and
+is the only row that fails outright, while the four regional variants sit at
+24/27. The amber banner is the tool admitting that its own baseline does not
+satisfy the contract, which felt more honest than hiding it.*
 
 ## AWS services used, and the architecture
 
@@ -210,8 +208,9 @@ flowchart TB
 
 ![Architecture](https://raw.githubusercontent.com/harshendram/aws-weekend-challenge2/main/screenshots/architecture.png)
 
-*Two Lambdas and no build system. `providers.py` is the seam that let the whole
-thing survive losing Bedrock.*
+*Architecture — two Lambdas and no build system. `providers.py` is the seam
+that let the whole thing survive losing Bedrock: everything above it speaks in
+targets and assertions, and nothing above it knows which AWS service answered.*
 
 No SAM, no CDK, no bootstrap stack — `infra/deploy.sh` is idempotent and uses
 nothing but the AWS CLI. The dashboard HTML is served from the same Lambda that
@@ -250,13 +249,7 @@ changed approach. Most technical writing sands all of that off and leaves you a
 clean narrative you cannot learn from, because it hides the only part you were
 going to get stuck on too.
 
-Her posts got me unstuck more than once this summer, and they changed how I
-wrote *this* one. My first draft opened with the finished architecture and never
-mentioned that Bedrock was dead on my account. I rewrote it to lead with the
-failure, kept the `DetectSen`**`time`**`nt` regex bug in, and left the amber
-"your baseline is broken" banner visible in the screenshot instead of cropping
-it out. That is a direct steal from how she writes. Thank you, @simi — please
-keep publishing the messy middle.
+Thank you, @simi — please keep publishing the messy middle.
 
 ## Try it
 
