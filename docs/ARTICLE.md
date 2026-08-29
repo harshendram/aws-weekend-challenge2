@@ -150,9 +150,22 @@ satisfy the contract, which felt more honest than hiding it.*
 
 ## AWS services used, and the architecture
 
-**Lambda, DynamoDB, S3, EventBridge, SNS, IAM, Bedrock** (control plane and
-runtime), **Amazon Comprehend, Amazon Translate, Service Quotas**, and the
-**AWS Price List API**.
+The full list, and what each one actually does in this build:
+
+| Service | What it does here |
+| --- | --- |
+| **AWS Lambda** | Two functions. `radar-agent` (python3.13, 600 s) runs the sweep; `radar-api` serves the dashboard and the read-only JSON behind one Function URL. |
+| **Amazon EventBridge** | `cron(0 9 * * ? *)` — one scheduled invocation a day, passing `{"mode":"sweep"}`. |
+| **Amazon DynamoDB** | Single on-demand table `driftradar` holding `RUN`, `SNAPSHOT` and `EVENT` items, with TTL on `expires_at` so history expires itself. |
+| **Amazon S3** | Private bucket for raw per-attempt output, public access blocked, read back through the API Lambda instead of being exposed. |
+| **Amazon SNS** | Topic `radar-alerts`, published to **only** when the diff finds a real change. |
+| **AWS IAM** | A separate least-privilege role per Lambda; the agent can write, the API can only read. |
+| **Amazon Bedrock** *(control plane)* | `ListFoundationModels` and `ListInferenceProfiles` across four regions — the catalog half of the daily diff. |
+| **Amazon Bedrock** *(runtime)* | `Converse`, for one-token reachability probes and for running contracts when inference is available. |
+| **Amazon Comprehend** | `DetectPiiEntities`, `DetectSentiment`, `DetectDominantLanguage`, `DetectEntities`, `DetectKeyPhrases` — a live contract target, not just a probe. |
+| **Amazon Translate** | `TranslateText`, including a round trip back to the source language to score fidelity. |
+| **Service Quotas** | `ListServiceQuotas` — corroborating evidence for entitlement. This is what proved 151 of 151 on-demand inference quotas sat at zero. |
+| **AWS Price List API** | Real per-region rates for all three AI services, refreshed into `pricing.json` rather than hardcoded. |
 
 ```mermaid
 flowchart TB
