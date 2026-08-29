@@ -1,0 +1,43 @@
+{
+  "id": "translate-fidelity",
+  "title": "Translation round-trip fidelity",
+  "description": "You usually cannot read the language you are translating into, so the only mechanical check available is a round trip: translate out, translate back, and require that the load-bearing terms survived. Product names, identifiers and negations are what break, and a negation that flips is a support ticket that means the opposite of what the customer wrote.",
+  "repetitions": 2,
+  "targets": [
+    "translate:es?back=en",
+    "translate:fr?back=en",
+    "translate:de?back=en",
+    "translate:hi?back=en",
+    "translate:ja?back=en"
+  ],
+  "baseline": "translate:es?back=en",
+  "cases": [
+    {
+      "id": "identifiers-survive",
+      "input": "The Zephyr X200 router rejected the firmware update on port 8080.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_has_path", "path": "translated" },
+        { "type": "contains_any", "values": ["Zephyr"] },
+        { "type": "contains_any", "values": ["8080"] }
+      ]
+    },
+    {
+      "id": "negation-must-not-flip",
+      "input": "The refund was not processed and the account has not been closed.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "regex_match", "pattern": "\"roundtrip\":\\s*\"[^\"]*\\bnot\\b[^\"]*\\bnot\\b" }
+      ]
+    },
+    {
+      "id": "numbers-survive",
+      "input": "Your invoice for 3 seats totals 149 dollars and is due on the 14th.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "contains_any", "values": ["149"] },
+        { "type": "contains_any", "values": ["14"] }
+      ]
+    }
+  ]
+}

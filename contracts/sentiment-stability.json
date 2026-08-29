@@ -1,0 +1,49 @@
+{
+  "id": "sentiment-stability",
+  "title": "Sentiment classification stability",
+  "description": "A managed classifier feels like a fixed function, so teams wire it straight into routing rules and never test it again. It is not fixed: AWS updates the model underneath, and regional endpoints do not always agree. This contract pins the labels a routing rule depends on, including the genuinely hard mixed-signal case that decides whether an angry customer reaches a human.",
+  "repetitions": 3,
+  "targets": [
+    "comprehend:sentiment@us-east-1",
+    "comprehend:sentiment@us-west-2",
+    "comprehend:sentiment@eu-west-1",
+    "comprehend:sentiment@ap-south-1"
+  ],
+  "baseline": "comprehend:sentiment@us-east-1",
+  "cases": [
+    {
+      "id": "clearly-negative",
+      "input": "This is the third time this week the app has lost my work. I am done. Cancel my subscription.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_path_in", "path": "sentiment", "values": ["NEGATIVE"] },
+        { "type": "json_num_at_least", "path": "scores.Negative", "value": 0.9 }
+      ]
+    },
+    {
+      "id": "clearly-positive",
+      "input": "The new export feature saved my team an entire afternoon. Genuinely excellent work.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_path_in", "path": "sentiment", "values": ["POSITIVE"] },
+        { "type": "json_num_at_least", "path": "scores.Positive", "value": 0.9 }
+      ]
+    },
+    {
+      "id": "neutral-factual",
+      "input": "The invoice for March was issued on the 3rd and covers seats 1 through 40.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_path_in", "path": "sentiment", "values": ["NEUTRAL"] }
+      ]
+    },
+    {
+      "id": "mixed-signal-escalation",
+      "input": "Support was lovely and fixed it fast, but this is the fourth outage this month and we are evaluating alternatives.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_path_in", "path": "sentiment", "values": ["NEGATIVE", "MIXED"] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+build/
+runs/
+.env
+*.pyc
+__pycache__/
+out.json

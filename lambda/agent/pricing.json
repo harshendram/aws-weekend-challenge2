@@ -1,0 +1,918 @@
+{
+  "_source": "AWS Price List API (pricing:GetProducts)",
+  "_bedrock_region": "us-east-1",
+  "_note": "Bedrock: USD per 1M tokens, on-demand synchronous. Comprehend: USD per 100-char unit, 3-unit minimum. Translate: USD per character.",
+  "models": {
+    "Claude2.0": {
+      "model_name": "Claude 2.0",
+      "provider": "Anthropic",
+      "input_per_1m": 8.0,
+      "complete": false
+    },
+    "Claude2.1": {
+      "model_name": "Claude 2.1",
+      "provider": "Anthropic",
+      "input_per_1m": 8.0,
+      "complete": false
+    },
+    "Claude3Haiku": {
+      "model_name": "Claude 3 Haiku",
+      "provider": "Anthropic",
+      "input_per_1m": 0.25,
+      "complete": false
+    },
+    "Claude3Sonnet": {
+      "model_name": "Claude 3 Sonnet",
+      "provider": "Anthropic",
+      "input_per_1m": 3.0,
+      "complete": false
+    },
+    "ClaudeInstant": {
+      "model_name": "Claude Instant",
+      "provider": "Anthropic",
+      "input_per_1m": 0.8,
+      "complete": false
+    },
+    "DeepSeek-R1": {
+      "model_name": "R1",
+      "provider": "DeepSeek",
+      "input_per_1m": 1.35,
+      "output_per_1m": 5.4,
+      "complete": true
+    },
+    "GPT-OSS-Safeguard-120B": {
+      "model_name": "GPT OSS Safeguard 120B",
+      "provider": "OpenAI",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.6,
+      "complete": true
+    },
+    "GPT-OSS-Safeguard-20B": {
+      "model_name": "GPT OSS Safeguard 20B",
+      "provider": "OpenAI",
+      "input_per_1m": 0.07,
+      "output_per_1m": 0.2,
+      "complete": true
+    },
+    "Gemma-3-12B-IT": {
+      "model_name": "Gemma 3 12B",
+      "provider": "Google",
+      "output_per_1m": 0.29,
+      "input_per_1m": 0.09,
+      "complete": true
+    },
+    "Gemma-3-27B-IT": {
+      "model_name": "Gemma 3 27B",
+      "provider": "Google",
+      "input_per_1m": 0.23,
+      "output_per_1m": 0.38,
+      "complete": true
+    },
+    "Gemma-3-4B-IT": {
+      "model_name": "Gemma 3 4B",
+      "provider": "Google",
+      "output_per_1m": 0.08,
+      "input_per_1m": 0.04,
+      "complete": true
+    },
+    "Kimi-K2-Thinking": {
+      "model_name": "Kimi K2 Thinking",
+      "provider": "Kimi AI",
+      "output_per_1m": 2.5,
+      "input_per_1m": 0.6,
+      "complete": true
+    },
+    "Llama3-1-70B": {
+      "model_name": "Llama 3.1 70B",
+      "provider": "Meta",
+      "input_per_1m": 0.9,
+      "output_per_1m": 0.9,
+      "complete": true
+    },
+    "Llama3-1-8B": {
+      "model_name": "Llama 3.1 8B",
+      "provider": "Meta",
+      "input_per_1m": 0.22,
+      "output_per_1m": 0.22,
+      "complete": true
+    },
+    "Llama3-2-11B": {
+      "model_name": "Llama 3.2 11B",
+      "provider": "Meta",
+      "input_per_1m": 0.16,
+      "output_per_1m": 0.16,
+      "complete": true
+    },
+    "Llama3-2-1B": {
+      "model_name": "Llama 3.2 1B",
+      "provider": "Meta",
+      "output_per_1m": 0.1,
+      "input_per_1m": 0.1,
+      "complete": true
+    },
+    "Llama3-2-3B": {
+      "model_name": "Llama 3.2 3B",
+      "provider": "Meta",
+      "output_per_1m": 0.15,
+      "input_per_1m": 0.15,
+      "complete": true
+    },
+    "Llama3-2-90B": {
+      "model_name": "Llama 3.2 90B",
+      "provider": "Meta",
+      "output_per_1m": 0.72,
+      "input_per_1m": 0.72,
+      "complete": true
+    },
+    "Llama3-3-70B": {
+      "model_name": "Llama 3.3 70B",
+      "provider": "Meta",
+      "output_per_1m": 0.72,
+      "input_per_1m": 0.72,
+      "complete": true
+    },
+    "Llama3-70B": {
+      "model_name": "Llama 3 70B",
+      "provider": "Meta",
+      "output_per_1m": 3.5,
+      "input_per_1m": 2.65,
+      "complete": true
+    },
+    "Llama3-8B": {
+      "model_name": "Llama 3 8B",
+      "provider": "Meta",
+      "output_per_1m": 0.6,
+      "input_per_1m": 0.3,
+      "complete": true
+    },
+    "Llama4-Maverick-17B": {
+      "model_name": "Llama 4 Maverick 17B",
+      "provider": "Meta",
+      "output_per_1m": 0.97,
+      "input_per_1m": 0.24,
+      "complete": true
+    },
+    "Llama4-Scout-17B": {
+      "model_name": "Llama 4 Scout 17B",
+      "provider": "Meta",
+      "input_per_1m": 0.17,
+      "output_per_1m": 0.66,
+      "complete": true
+    },
+    "Magistral-Small-2509": {
+      "model_name": "Magistral Small 1.2",
+      "provider": "Mistral",
+      "input_per_1m": 0.5,
+      "output_per_1m": 1.5,
+      "complete": true
+    },
+    "Minimax-M2": {
+      "model_name": "Minimax M2",
+      "provider": "Minimax AI",
+      "output_per_1m": 1.2,
+      "input_per_1m": 0.3,
+      "complete": true
+    },
+    "Ministral-3-14b-Instruct": {
+      "model_name": "Ministral 14B 3.0",
+      "provider": "Mistral",
+      "input_per_1m": 0.2,
+      "output_per_1m": 0.2,
+      "complete": true
+    },
+    "Ministral-3-3b-Instruct": {
+      "model_name": "Ministral 3B 3.0",
+      "provider": "Mistral",
+      "output_per_1m": 0.1,
+      "input_per_1m": 0.1,
+      "complete": true
+    },
+    "Ministral-3-8b-Instruct": {
+      "model_name": "Ministral 8B 3.0",
+      "provider": "Mistral",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.15,
+      "complete": true
+    },
+    "Mistral-Large-3-675b-Instruct": {
+      "model_name": "Mistral Large 3",
+      "provider": "Mistral",
+      "output_per_1m": 1.5,
+      "input_per_1m": 0.5,
+      "complete": true
+    },
+    "Mistral7B": {
+      "model_name": "Mistral 7B",
+      "provider": "Mistral",
+      "output_per_1m": 0.2,
+      "input_per_1m": 0.15,
+      "complete": true
+    },
+    "MistralLarge": {
+      "model_name": "Mistral Large",
+      "provider": "Mistral",
+      "input_per_1m": 4.0,
+      "output_per_1m": 12.0,
+      "complete": true
+    },
+    "MistralSmall": {
+      "model_name": "Mistral Small",
+      "provider": "Mistral",
+      "input_per_1m": 1.0,
+      "output_per_1m": 3.0,
+      "complete": true
+    },
+    "Mixtral8x7B": {
+      "model_name": "Mixtral 8x7B",
+      "provider": "Mistral",
+      "output_per_1m": 0.7,
+      "input_per_1m": 0.45,
+      "complete": true
+    },
+    "Nemotron-Nano-12B-V2-VL-BF16": {
+      "model_name": "NVIDIA Nemotron Nano 2 VL",
+      "provider": "Nvidia",
+      "input_per_1m": 0.2,
+      "output_per_1m": 0.6,
+      "complete": true
+    },
+    "Nemotron-Nano-3-30B": {
+      "model_name": "Nemotron Nano 3 30B",
+      "provider": "Nvidia",
+      "output_per_1m": 0.24,
+      "input_per_1m": 0.06,
+      "complete": true
+    },
+    "Nemotron-Nano-9B-V2": {
+      "model_name": "NVIDIA Nemotron Nano 2",
+      "provider": "Nvidia",
+      "input_per_1m": 0.06,
+      "output_per_1m": 0.23,
+      "complete": true
+    },
+    "Nova2.0Lite": {
+      "model_name": "Nova 2.0 Lite",
+      "provider": "",
+      "output_per_1m": 2.5,
+      "input_per_1m": 0.3,
+      "complete": true
+    },
+    "Nova2.0Omni-text": {
+      "model_name": "Nova 2.0 Omni",
+      "provider": "",
+      "input_per_1m": 0.3,
+      "output_per_1m": 2.8,
+      "complete": true
+    },
+    "Nova2.0Pro-text": {
+      "model_name": "Nova 2.0 Pro",
+      "provider": "",
+      "input_per_1m": 1.25,
+      "output_per_1m": 11.0,
+      "complete": true
+    },
+    "NovaLite": {
+      "model_name": "Nova Lite",
+      "provider": "",
+      "input_per_1m": 0.06,
+      "output_per_1m": 0.24,
+      "complete": true
+    },
+    "NovaMicro": {
+      "model_name": "Nova Micro",
+      "provider": "",
+      "output_per_1m": 0.14,
+      "input_per_1m": 0.035,
+      "complete": true
+    },
+    "NovaMultiModalEmbeddings": {
+      "model_name": "Nova MME",
+      "provider": "",
+      "input_per_1m": 0.135,
+      "complete": false
+    },
+    "NovaPremier": {
+      "model_name": "Nova Premier",
+      "provider": "",
+      "output_per_1m": 12.5,
+      "input_per_1m": 2.5,
+      "complete": true
+    },
+    "NovaPro": {
+      "model_name": "Nova Pro",
+      "provider": "",
+      "output_per_1m": 3.2,
+      "input_per_1m": 1.0,
+      "complete": true
+    },
+    "NovaSonic-speech": {
+      "model_name": "Nova Sonic",
+      "provider": "",
+      "input_per_1m": 3.4,
+      "output_per_1m": 13.6,
+      "complete": true
+    },
+    "NovaSonic-text": {
+      "model_name": "Nova Sonic",
+      "provider": "",
+      "output_per_1m": 0.24,
+      "input_per_1m": 0.06,
+      "complete": true
+    },
+    "NovaSonic2.0-speech": {
+      "model_name": "Nova Sonic 2.0",
+      "provider": "",
+      "input_per_1m": 3.0,
+      "output_per_1m": 12.0,
+      "complete": true
+    },
+    "NovaSonic2.0-text": {
+      "model_name": "Nova Sonic 2.0",
+      "provider": "",
+      "output_per_1m": 2.75,
+      "input_per_1m": 0.33,
+      "complete": true
+    },
+    "PixtralLarge2502": {
+      "model_name": "Pixtral Large 25.02",
+      "provider": "Mistral",
+      "input_per_1m": 2.0,
+      "output_per_1m": 6.0,
+      "complete": true
+    },
+    "Qwen3-32B": {
+      "model_name": "Qwen3 32B",
+      "provider": "Qwen",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.6,
+      "complete": true
+    },
+    "Qwen3-VL-235B-A22B": {
+      "model_name": "Qwen3 VL 235B A22B",
+      "provider": "Qwen",
+      "input_per_1m": 0.53,
+      "output_per_1m": 2.66,
+      "complete": true
+    },
+    "Qwen3Coder-30B-A3B": {
+      "model_name": "Qwen3 Coder 30B A3B",
+      "provider": "Qwen",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.6,
+      "complete": true
+    },
+    "TitanEmbeddingV2-Text": {
+      "model_name": "",
+      "provider": "",
+      "input_per_1m": 0.02,
+      "complete": false
+    },
+    "TitanEmbeddingsG1-Image": {
+      "model_name": "",
+      "provider": "",
+      "input_per_1m": 0.8,
+      "complete": false
+    },
+    "TitanEmbeddingsG1-Text": {
+      "model_name": "",
+      "provider": "",
+      "input_per_1m": 0.1,
+      "complete": false
+    },
+    "TitanText-Premier": {
+      "model_name": "",
+      "provider": "",
+      "input_per_1m": 0.5,
+      "output_per_1m": 1.5,
+      "complete": true
+    },
+    "TitanTextG1-Express": {
+      "model_name": "",
+      "provider": "",
+      "output_per_1m": 0.6,
+      "input_per_1m": 0.2,
+      "complete": true
+    },
+    "TitanTextG1-Lite": {
+      "model_name": "",
+      "provider": "",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.2,
+      "complete": true
+    },
+    "Voxtral-Mini-24B-2507": {
+      "model_name": "Voxtral Small 1.0",
+      "provider": "Mistral",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0.3,
+      "complete": true
+    },
+    "Voxtral-Mini-3B-2507": {
+      "model_name": "Voxtral Mini 1.0",
+      "provider": "Mistral",
+      "input_per_1m": 0.04,
+      "output_per_1m": 0.04,
+      "complete": true
+    },
+    "deepseek.v3.1-mantle": {
+      "model_name": "DeepSeek V3.1",
+      "provider": "DeepSeek",
+      "input_per_1m": 0.58,
+      "output_per_1m": 1.68,
+      "complete": true
+    },
+    "deepseek.v3.2": {
+      "model_name": "DeepSeek v3.2",
+      "provider": "DeepSeek",
+      "input_per_1m": 0.62,
+      "output_per_1m": 1.85,
+      "complete": true
+    },
+    "deepseek.v3.2-mantle": {
+      "model_name": "DeepSeek v3.2",
+      "provider": "DeepSeek",
+      "input_per_1m": 0.62,
+      "output_per_1m": 1.85,
+      "complete": true
+    },
+    "google.gemma-3-12b-it-mantle": {
+      "model_name": "Gemma 3 12B",
+      "provider": "Google",
+      "output_per_1m": 0.29,
+      "input_per_1m": 0.09,
+      "complete": true
+    },
+    "google.gemma-3-27b-it-mantle": {
+      "model_name": "Gemma 3 27B",
+      "provider": "Google",
+      "input_per_1m": 0.23,
+      "output_per_1m": 0.38,
+      "complete": true
+    },
+    "google.gemma-3-4b-it-mantle": {
+      "model_name": "Gemma 3 4B",
+      "provider": "Google",
+      "input_per_1m": 0.04,
+      "output_per_1m": 0.08,
+      "complete": true
+    },
+    "google.gemma-4-26b-a4b-mantle": {
+      "model_name": "google.gemma-4-26b-a4b",
+      "provider": "Google",
+      "input_per_1m": 0.13,
+      "output_per_1m": 0.4,
+      "complete": true
+    },
+    "google.gemma-4-31b-mantle": {
+      "model_name": "google.gemma-4-31b",
+      "provider": "Google",
+      "output_per_1m": 0.4,
+      "input_per_1m": 0.14,
+      "complete": true
+    },
+    "google.gemma-4-e2b-mantle": {
+      "model_name": "google.gemma-4-e2b",
+      "provider": "Google",
+      "output_per_1m": 0.08,
+      "input_per_1m": 0.04,
+      "complete": true
+    },
+    "gpt-oss-120b": {
+      "model_name": "gpt-oss-120b",
+      "provider": "OpenAI",
+      "output_per_1m": 0.6,
+      "input_per_1m": 0.15,
+      "complete": true
+    },
+    "gpt-oss-20b": {
+      "model_name": "gpt-oss-20b",
+      "provider": "OpenAI",
+      "output_per_1m": 0.3,
+      "input_per_1m": 0.07,
+      "complete": true
+    },
+    "minimax.minimax-m2-mantle": {
+      "model_name": "Minimax M2",
+      "provider": "Minimax AI",
+      "input_per_1m": 0.3,
+      "output_per_1m": 1.2,
+      "complete": true
+    },
+    "minimax.minimax-m2.1": {
+      "model_name": "Minimax M2.1",
+      "provider": "Minimax AI",
+      "output_per_1m": 1.2,
+      "input_per_1m": 0.3,
+      "complete": true
+    },
+    "minimax.minimax-m2.1-mantle": {
+      "model_name": "Minimax M2.1",
+      "provider": "Minimax AI",
+      "input_per_1m": 0.3,
+      "output_per_1m": 1.2,
+      "complete": true
+    },
+    "minimax.minimax-m2.5": {
+      "model_name": "MiniMax M2.5",
+      "provider": "Minimax AI",
+      "input_per_1m": 0.3,
+      "output_per_1m": 1.2,
+      "complete": true
+    },
+    "minimax.minimax-m2.5-mantle": {
+      "model_name": "MiniMax M2.5",
+      "provider": "Minimax AI",
+      "output_per_1m": 1.2,
+      "input_per_1m": 0.3,
+      "complete": true
+    },
+    "mistral.devstral-2-123b": {
+      "model_name": "Devstral",
+      "provider": "Mistral AI",
+      "input_per_1m": 0.4,
+      "output_per_1m": 2.0,
+      "complete": true
+    },
+    "mistral.devstral-2-123b-mantle": {
+      "model_name": "Devstral",
+      "provider": "Mistral AI",
+      "output_per_1m": 2.0,
+      "input_per_1m": 0.4,
+      "complete": true
+    },
+    "mistral.magistral-small-2509-mantle": {
+      "model_name": "Magistral Small 1.2",
+      "provider": "Mistral",
+      "output_per_1m": 1.5,
+      "input_per_1m": 0.5,
+      "complete": true
+    },
+    "mistral.ministral-3-14b-instruct-mantle": {
+      "model_name": "Ministral 14B 3.0",
+      "provider": "Mistral",
+      "output_per_1m": 0.2,
+      "input_per_1m": 0.2,
+      "complete": true
+    },
+    "mistral.ministral-3-3b-instruct-mantle": {
+      "model_name": "Ministral 3B 3.0",
+      "provider": "Mistral",
+      "output_per_1m": 0.1,
+      "input_per_1m": 0.1,
+      "complete": true
+    },
+    "mistral.ministral-3-8b-instruct-mantle": {
+      "model_name": "Ministral 8B 3.0",
+      "provider": "Mistral",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.15,
+      "complete": true
+    },
+    "mistral.mistral-large-3-675b-instruct-mantle": {
+      "model_name": "Mistral Large 3",
+      "provider": "Mistral",
+      "input_per_1m": 0.5,
+      "output_per_1m": 1.5,
+      "complete": true
+    },
+    "mistral.voxtral-mini-3b-2507-mantle": {
+      "model_name": "Voxtral Mini 1.0",
+      "provider": "Mistral",
+      "output_per_1m": 0.04,
+      "input_per_1m": 0.04,
+      "complete": true
+    },
+    "mistral.voxtral-small-24b-2507-mantle": {
+      "model_name": "Voxtral Small 1.0",
+      "provider": "Mistral",
+      "input_per_1m": 0.1,
+      "output_per_1m": 0.3,
+      "complete": true
+    },
+    "moonshotai.kimi-k2-thinking-mantle": {
+      "model_name": "Kimi K2 Thinking",
+      "provider": "Moonshot AI",
+      "input_per_1m": 0.6,
+      "output_per_1m": 2.5,
+      "complete": true
+    },
+    "moonshotai.kimi-k2.5": {
+      "model_name": "Kimi K2.5",
+      "provider": "Moonshot AI",
+      "output_per_1m": 3.0,
+      "input_per_1m": 0.6,
+      "complete": true
+    },
+    "moonshotai.kimi-k2.5-mantle": {
+      "model_name": "Kimi K2.5",
+      "provider": "Moonshot AI",
+      "output_per_1m": 3.0,
+      "input_per_1m": 0.6,
+      "complete": true
+    },
+    "nvidia.nemotron-nano-12b-v2-mantle": {
+      "model_name": "NVIDIA Nemotron Nano 2 VL",
+      "provider": "Nvidia",
+      "output_per_1m": 0.6,
+      "input_per_1m": 0.2,
+      "complete": true
+    },
+    "nvidia.nemotron-nano-3-30b-mantle": {
+      "model_name": "Nemotron Nano 3 30B",
+      "provider": "Nvidia",
+      "input_per_1m": 0.06,
+      "output_per_1m": 0.24,
+      "complete": true
+    },
+    "nvidia.nemotron-nano-9b-v2-mantle": {
+      "model_name": "NVIDIA Nemotron Nano 2",
+      "provider": "Nvidia",
+      "output_per_1m": 0.23,
+      "input_per_1m": 0.06,
+      "complete": true
+    },
+    "nvidia.nemotron-super-3-120b": {
+      "model_name": "NVIDIA Nemotron 3 Super 120B A12B",
+      "provider": "Nvidia",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.65,
+      "complete": true
+    },
+    "nvidia.nemotron-super-3-120b-mantle": {
+      "model_name": "NVIDIA Nemotron 3 Super 120B A12B",
+      "provider": "Nvidia",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.65,
+      "complete": true
+    },
+    "openai.gpt-oss-120b-mantle": {
+      "model_name": "gpt-oss-120b",
+      "provider": "OpenAI",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.6,
+      "complete": true
+    },
+    "openai.gpt-oss-20b-mantle": {
+      "model_name": "gpt-oss-20b",
+      "provider": "OpenAI",
+      "input_per_1m": 0.07,
+      "output_per_1m": 0.3,
+      "complete": true
+    },
+    "openai.gpt-oss-safeguard-120b-mantle": {
+      "model_name": "GPT OSS Safeguard 120B",
+      "provider": "OpenAI",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.6,
+      "complete": true
+    },
+    "openai.gpt-oss-safeguard-20b-mantle": {
+      "model_name": "GPT OSS Safeguard 20B",
+      "provider": "OpenAI",
+      "output_per_1m": 0.2,
+      "input_per_1m": 0.07,
+      "complete": true
+    },
+    "qwen.qwen3-235b-a22b-2507-mantle": {
+      "model_name": "Qwen3 235B A22B 2507",
+      "provider": "Qwen",
+      "output_per_1m": 0.88,
+      "input_per_1m": 0.22,
+      "complete": true
+    },
+    "qwen.qwen3-32b-mantle": {
+      "model_name": "Qwen3 32B",
+      "provider": "Qwen",
+      "output_per_1m": 0.6,
+      "input_per_1m": 0.15,
+      "complete": true
+    },
+    "qwen.qwen3-coder-30b-a3b-instruct-mantle": {
+      "model_name": "Qwen3 Coder 30B A3B",
+      "provider": "Qwen",
+      "input_per_1m": 0.15,
+      "output_per_1m": 0.6,
+      "complete": true
+    },
+    "qwen.qwen3-coder-480b-a35b-instruct-mantle": {
+      "model_name": "Qwen3 Coder 480B A35B",
+      "provider": "Qwen",
+      "output_per_1m": 1.8,
+      "input_per_1m": 0.45,
+      "complete": true
+    },
+    "qwen.qwen3-coder-next": {
+      "model_name": "Qwen3 Coder Next",
+      "provider": "Qwen",
+      "output_per_1m": 1.2,
+      "input_per_1m": 0.5,
+      "complete": true
+    },
+    "qwen.qwen3-coder-next-mantle": {
+      "model_name": "Qwen3 Coder Next",
+      "provider": "Qwen",
+      "input_per_1m": 0.5,
+      "output_per_1m": 1.2,
+      "complete": true
+    },
+    "qwen.qwen3-next-80b-a3b-instruct-mantle": {
+      "model_name": "Qwen3 Next 80B A3B",
+      "provider": "Qwen",
+      "output_per_1m": 1.2,
+      "input_per_1m": 0.14,
+      "complete": true
+    },
+    "qwen.qwen3-vl-235b-a22b-instruct-mantle": {
+      "model_name": "Qwen3 VL 235B A22B",
+      "provider": "Qwen",
+      "input_per_1m": 0.53,
+      "output_per_1m": 2.66,
+      "complete": true
+    },
+    "writer.palmyra-vision-7b": {
+      "model_name": "Writer Palmyra Vision 7B",
+      "provider": "Writer",
+      "output_per_1m": 0.6,
+      "input_per_1m": 0.15,
+      "complete": true
+    },
+    "writer.palmyra-vision-7b-mantle": {
+      "model_name": "Writer Palmyra Vision 7B",
+      "provider": "Writer",
+      "output_per_1m": 0.6,
+      "input_per_1m": 0.15,
+      "complete": true
+    },
+    "xai.grok-4.6-mantle": {
+      "model_name": "xai.grok-4.6",
+      "provider": "",
+      "output_per_1m": 6.0,
+      "input_per_1m": 2.2,
+      "complete": true
+    },
+    "zai.glm-4.7": {
+      "model_name": "GLM 4.7",
+      "provider": "Z AI",
+      "output_per_1m": 2.2,
+      "input_per_1m": 0.6,
+      "complete": true
+    },
+    "zai.glm-4.7-flash": {
+      "model_name": "GLM 4.7 Flash",
+      "provider": "Z AI",
+      "output_per_1m": 0.4,
+      "input_per_1m": 0.07,
+      "complete": true
+    },
+    "zai.glm-4.7-flash-mantle": {
+      "model_name": "GLM 4.7 Flash",
+      "provider": "Z AI",
+      "output_per_1m": 0.4,
+      "input_per_1m": 0.07,
+      "complete": true
+    },
+    "zai.glm-4.7-mantle": {
+      "model_name": "GLM 4.7",
+      "provider": "Z AI",
+      "input_per_1m": 0.6,
+      "output_per_1m": 2.2,
+      "complete": true
+    },
+    "zai.glm5": {
+      "model_name": "GLM 5",
+      "provider": "Z AI",
+      "output_per_1m": 3.2,
+      "input_per_1m": 1.0,
+      "complete": true
+    },
+    "zai.glm5-mantle": {
+      "model_name": "GLM 5",
+      "provider": "Z AI",
+      "input_per_1m": 1.0,
+      "output_per_1m": 3.2,
+      "complete": true
+    }
+  },
+  "services": {
+    "us-east-1": {
+      "DetectPiiEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectKeyPhrases": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectDominantLanguage": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectSentiment": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "TranslateText": {
+        "per_char": 1.5e-05
+      }
+    },
+    "us-west-2": {
+      "DetectPiiEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectDominantLanguage": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectSentiment": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectKeyPhrases": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "TranslateText": {
+        "per_char": 1.5e-05
+      }
+    },
+    "ap-south-1": {
+      "DetectPiiEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectKeyPhrases": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectSentiment": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectDominantLanguage": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "TranslateText": {
+        "per_char": 1.5e-05
+      }
+    },
+    "eu-west-1": {
+      "DetectPiiEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectKeyPhrases": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectEntities": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectDominantLanguage": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "DetectSentiment": {
+        "per_unit": 0.0001,
+        "unit_chars": 100,
+        "min_units": 3
+      },
+      "TranslateText": {
+        "per_char": 1.5e-05
+      }
+    }
+  }
+}

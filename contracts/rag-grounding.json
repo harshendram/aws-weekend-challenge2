@@ -1,0 +1,46 @@
+{
+  "id": "rag-grounding",
+  "title": "RAG groundedness + refusal",
+  "description": "The hallucination test. Given a short context, the model must answer only from it - and must visibly refuse when the answer simply is not there. Cheap models often invent a plausible answer instead of refusing.",
+  "system": "Answer strictly and only from the CONTEXT provided. If the context does not contain the answer, reply exactly: I don't know based on the provided context. Never use outside knowledge.",
+  "max_tokens": 300,
+  "repetitions": 3,
+  "targets": [
+    "bedrock:us.amazon.nova-micro-v1:0",
+    "bedrock:us.amazon.nova-lite-v1:0",
+    "bedrock:us.amazon.nova-2-lite-v1:0",
+    "bedrock:us.amazon.nova-pro-v1:0"
+  ],
+  "baseline": "bedrock:us.amazon.nova-pro-v1:0",
+  "judge": "bedrock:us.amazon.nova-lite-v1:0",
+  "cases": [
+    {
+      "id": "answerable",
+      "context": "The Zephyr X200 router supports Wi-Fi 6E and ships with a 3-year warranty. It has 4 gigabit LAN ports. Firmware updates are delivered quarterly.",
+      "input": "How many LAN ports does the Zephyr X200 have?",
+      "assert": [
+        { "type": "contains_any", "values": ["4", "four"] },
+        { "type": "grounded_in_context" },
+        { "type": "max_output_tokens", "value": 300 }
+      ]
+    },
+    {
+      "id": "unanswerable-must-refuse",
+      "context": "The Zephyr X200 router supports Wi-Fi 6E and ships with a 3-year warranty. It has 4 gigabit LAN ports. Firmware updates are delivered quarterly.",
+      "input": "What is the price of the Zephyr X200 in euros?",
+      "assert": [
+        { "type": "refuses" },
+        { "type": "not_contains", "values": ["\u20ac", "EUR", "euro"] }
+      ]
+    },
+    {
+      "id": "plausible-trap",
+      "context": "The Zephyr X200 router supports Wi-Fi 6E and ships with a 3-year warranty. It has 4 gigabit LAN ports.",
+      "input": "Does the Zephyr X200 support Wi-Fi 7, and what is its maximum throughput?",
+      "assert": [
+        { "type": "refuses" },
+        { "type": "grounded_in_context" }
+      ]
+    }
+  ]
+}

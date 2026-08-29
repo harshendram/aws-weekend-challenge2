@@ -1,0 +1,44 @@
+{
+  "id": "pii-detection",
+  "title": "PII detection recall and precision",
+  "description": "Redaction quality is really two failures wearing one coat: missing an identifier leaks data, and inventing one destroys the text. This contract grades both directions separately, and compares the same detector across regions and confidence thresholds - the knob teams actually turn in production, usually without measuring what it costs them.",
+  "repetitions": 3,
+  "targets": [
+    "comprehend:pii@us-east-1",
+    "comprehend:pii@us-west-2",
+    "comprehend:pii@eu-west-1",
+    "comprehend:pii@ap-south-1",
+    "comprehend:pii@us-east-1?min=0.9",
+    "comprehend:pii@us-east-1?min=0.999"
+  ],
+  "baseline": "comprehend:pii@us-east-1",
+  "cases": [
+    {
+      "id": "recall-contact-details",
+      "input": "Hi team, please refund Marcus at marcus.webb@example.com or call him on 555-0142. His card ending 4111 1111 1111 1111 was double charged.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_path_includes", "path": "types", "values": ["EMAIL", "PHONE", "CREDIT_DEBIT_NUMBER"] },
+        { "type": "json_num_at_least", "path": "count", "value": 3 }
+      ]
+    },
+    {
+      "id": "precision-infrastructure-text",
+      "input": "The deployment failed at 14:32 UTC because the us-east-1 load balancer rejected the health check on port 8080.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_path_excludes", "path": "types", "values": ["EMAIL", "PHONE", "SSN", "CREDIT_DEBIT_NUMBER", "ADDRESS", "NAME"] },
+        { "type": "json_len_between", "path": "entities", "min": 0, "max": 0 }
+      ]
+    },
+    {
+      "id": "recall-credentials",
+      "input": "Temporary access for the audit: username auditor_k, password Hunter2Hunter2, key AKIAIOSFODNN7EXAMPLE. Rotate these on Friday.",
+      "assert": [
+        { "type": "json_valid" },
+        { "type": "json_path_includes", "path": "types", "values": ["PASSWORD"] },
+        { "type": "json_num_at_least", "path": "count", "value": 1 }
+      ]
+    }
+  ]
+}
