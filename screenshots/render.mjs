@@ -21,23 +21,36 @@ const CHROME = [
 const FONTS =
   "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap";
 
-function page(defn) {
+// Mermaid draws its own title with a different CSS class per diagram type, so
+// styling it consistently means chasing several selectors. Pulling the title
+// out of the frontmatter and drawing it as HTML gives every diagram the same
+// heading, and leaves the .mmd portable for any other renderer.
+function splitTitle(src) {
+  const m = src.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+  if (!m) return { title: "", defn: src };
+  const t = m[1].match(/^title:\s*(.+)$/m);
+  return { title: t ? t[1].trim() : "", defn: src.slice(m[0].length) };
+}
+
+function page(src) {
+  const { title, defn } = splitTitle(src);
   return `<!doctype html><html><head><meta charset="utf-8">
 <link rel="stylesheet" href="${FONTS}">
 <script src="${mermaidJs}"></script>
 <style>
   html,body{margin:0;background:#FBF7EF;}
-  #frame{display:inline-block;padding:34px 38px;background:#FFFDF8;
+  #frame{display:inline-block;padding:30px 38px 34px;background:#FFFDF8;
     border:4px solid #14131A;box-shadow:12px 12px 0 #14131A;margin:30px;}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:27px;
+    color:#14131A;margin:0 0 22px;letter-spacing:-0.01em;}
+  h1 span{display:block;width:64px;height:6px;background:#B8F14A;
+    border:2px solid #14131A;margin-top:10px;}
   #out svg{display:block;height:auto;max-width:none;}
-  .nodeLabel,.edgeLabel,.messageText,.loopText,.noteText,.actor,.titleText,
+  .nodeLabel,.edgeLabel,.messageText,.loopText,.noteText,.actor,
   .labelText,.sectionTitle{font-family:'Inter',system-ui,sans-serif !important;}
-  .titleText,.flowchartTitleText,.sequenceDiagramTitleText{
-    font-family:'Space Grotesk',sans-serif !important;
-    font-weight:700 !important;font-size:26px !important;fill:#14131A !important;}
   .edgeLabel{background:#FFFDF8 !important;}
 </style></head><body>
-<div id="frame"><div id="out"></div></div>
+<div id="frame">${title ? `<h1>${title}<span></span></h1>` : ""}<div id="out"></div></div>
 <script type="module">
   window.__done = (async () => {
     // document.fonts.ready resolves instantly while nothing on the page uses
